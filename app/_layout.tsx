@@ -3,9 +3,13 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { createTables } from './db/db';
+import * as SQLite from 'expo-sqlite';
+
+let db: SQLite.SQLiteDatabase;
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -20,11 +24,29 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    'ags-r': require('../assets/fonts/AlegreyaSans-Regular.ttf'),
+    'ags-b': require('../assets/fonts/AlegreyaSans-Bold.ttf'),
     ...FontAwesome.font,
   });
+
+  const initDatabaseCallback = useCallback(async () => {
+    try {
+      console.log("Attempting to connect to database...");
+      db = SQLite.openDatabase("Budgety.db");
+      console.log("Connected to database!")
+      await createTables(db);
+    } catch (err) {
+      console.log(err);
+      throw Error("Could not connect to database");
+    }
+  }, [])
+
+  useEffect(() => {
+    initDatabaseCallback();
+  }, [])
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -44,6 +66,7 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
+
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
@@ -51,8 +74,9 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>
   );
 }
+
+export { db };
