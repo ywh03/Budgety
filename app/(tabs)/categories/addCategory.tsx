@@ -1,4 +1,4 @@
-import { createCategory, getAllRootCategories } from "@/app/db/categories";
+import { createCategory, getAllRootCategories, getCategoryById, updateCategory } from "@/app/db/categories";
 import { Text, View } from "@/components/Themed"
 import { Divider, FAB, Input } from "@rneui/themed";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
@@ -15,22 +15,29 @@ const addCategoryScreen = () => {
     const { parentCategoryId, parentHexColor } = useLocalSearchParams();
     if (typeof parentCategoryId !== 'string') throw Error("Wrong local search params");
     if (typeof parentHexColor !== 'string') throw Error("Wrong local search params");
-    const parsedParentCategoryId = parentCategoryId === "" ? null : parseInt(parentCategoryId);
+    const parsedParentCategoryId = parentCategoryId === "-1" ? null : parseInt(parentCategoryId);
 
     const [name, setName] = React.useState("");
     const [hexColor, setHexColor] = React.useState("");
     const [icon, setIcon] = React.useState("");
 
     const submitCategory = async () => {
+        const parentCategory = await getCategoryById(db, parseInt(parentCategoryId));
+        if (!parentCategory) throw Error("Parent category not found");
         const category = {
             name: name,
             icon: icon,
             hexColor: hexColor,
             parentCategoryId: parsedParentCategoryId,
+            descendantCount: 0,
         } as Category;
         await createCategory(db, category).then(() => {
             console.log("Category created");
         });
+        parentCategory[0].descendantCount += 1;
+        await updateCategory(db, parentCategory[0]).then(() => {
+            console.log("Parent category descendant count updated");
+        })
         router.back();
     }
 

@@ -28,7 +28,8 @@ export default function CategoryPage() {
         const iconString = info[0].icon;
         setIconFamily(iconString.split('/')[0]);
         setIconName(iconString.split('/')[1]);
-        const info2: Category[] = await getDescendantCategories(db, info[0]);
+        if (!info[0].id) throw Error("Descendant does not have id");
+        const info2: Category[] = await getDescendantCategories(db, info[0].id);
         setDescendantInfo(info2);
     }
 

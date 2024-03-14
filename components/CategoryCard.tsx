@@ -3,14 +3,19 @@ import { Text, View } from "./Themed";
 import { Icon, ListItem } from "@rneui/themed";
 import React from "react";
 import { Href, Link, router } from "expo-router";
+import { useAppDispatch } from "@/app/store/hooks";
+import { setCategory } from "@/app/store/features/entryInput/entryInputCategorySlice";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+//TODO: change props: any
 export default function CategoryCard (props: any) {
 
     const [iconFamily, setIconFamily] = React.useState("");
     const [iconName, setIconName] = React.useState("");
+
+    const dispatch = useAppDispatch();
 
     React.useEffect(() => {
         const iconString = props.categoryInfo.icon;
@@ -22,7 +27,14 @@ export default function CategoryCard (props: any) {
         <View>
             <ListItem
                 containerStyle={styles.categoryCard}
-                onPress={() => router.push('/(tabs)/categories/' + props.categoryInfo.id as Href<String>)}
+                onPress={() => {
+                    if (props.redirectType === "entryInput") router.push({pathname: "/(tabs)/entryInput/categorySelect", params: {categoryId: props.categoryInfo.id}});
+                    else if (props.redirectType === "category") router.push('/(tabs)/categories/' + props.categoryInfo.id as Href<String>)
+                    else if (props.redirectType === "entryInputEnd") {
+                        dispatch(setCategory(props.categoryInfo.id));
+                        router.navigate("/(tabs)/entryInput");
+                    }
+                }}
             >
                 <Icon name={iconName} type={iconFamily} color={props.categoryInfo.hexColor} size={20} iconStyle={styles.iconStyle} raised reverse />
                 <ListItem.Content>

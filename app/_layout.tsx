@@ -4,7 +4,8 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect } from 'react';
-
+import { Provider } from 'react-redux';
+import store from './store/store';
 import { useColorScheme } from '@/components/useColorScheme';
 import { createTables } from './db/db';
 import * as SQLite from 'expo-sqlite';
@@ -72,9 +73,11 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <Provider store={store}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </Provider>
     </ThemeProvider>
   );
 }

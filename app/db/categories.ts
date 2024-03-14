@@ -51,13 +51,13 @@ export const getAllRootCategories = async (db: SQLite.SQLiteDatabase) => {
     }
 }
 
-export const getDescendantCategories = async (db: SQLite.SQLiteDatabase, parentCategory: Category) => {
+export const getDescendantCategories = async (db: SQLite.SQLiteDatabase, id: number) => {
     const getQuery = `
         SELECT * FROM Categories
         WHERE parentCategoryId = ?
     `
 
-    const values: SQLite.SQLStatementArg[] = [parentCategory.id ?? -1];
+    const values: SQLite.SQLStatementArg[] = [id];
 
     try {
         const categories: Category[] = [];
@@ -132,7 +132,7 @@ export const getCategoryById = async (db: SQLite.SQLiteDatabase, id: number) => 
 export const updateCategory = async (db: SQLite.SQLiteDatabase, updatedCategory: Category) => {
     const updateQuery = `
         UPDATE Categories
-        SET name = ?, icon = ?, hexColor = ?, parentCategoryId = ?
+        SET name = ?, icon = ?, hexColor = ?, parentCategoryId = ?, descendantCount = ?
         WHERE id = ?
     `
 
@@ -140,8 +140,9 @@ export const updateCategory = async (db: SQLite.SQLiteDatabase, updatedCategory:
         updatedCategory.name,
         updatedCategory.icon,
         updatedCategory.hexColor,
-        updatedCategory.parentCategoryId ?? null,
-        updatedCategory.id ?? -1
+        updatedCategory.parentCategoryId,
+        updatedCategory.descendantCount,
+        updatedCategory.id,
     ]
 
     try {

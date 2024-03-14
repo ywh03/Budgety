@@ -7,11 +7,19 @@ type Account = {
 };
 
 type Category = {
-    id?: number,
+    id: number,
     name: string,
     icon: string,
     hexColor: string,
-    parentCategoryId?: number;
+    parentCategoryId: number;
+    descendantCount: number;
+}
+
+type CategoryInput = {
+    name: string,
+    icon: string,
+    hexColor: string,
+    parentCategoryId: number;
 }
 
 type Entry = {

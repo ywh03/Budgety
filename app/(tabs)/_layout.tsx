@@ -68,7 +68,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="entryInput/index"
+        name="entryInput"
         options = {{
           title: 'New Entry',
           tabBarIcon: ({ color }) => <TabBarIcon name="plus-square-o" color={"green"} />,
