@@ -17,6 +17,7 @@ export const createTables = async (db: SQLite.SQLiteDatabase) => {
             icon TEXT,
             hexColor TEXT,
             parentCategoryId INTEGER,
+            descendantCount INTEGER,
             FOREIGN KEY (parentCategoryId) REFERENCES Categories(id)
         )
     `

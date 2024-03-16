@@ -29,7 +29,7 @@ export default function CategoryScreen() {
             <View>
                 {
                     allCategories?.map((category) => {
-                        return <CategoryCard key={category.id} categoryInfo={category} />
+                        return <CategoryCard key={category.id} categoryInfo={category} redirectType={"category"} />
                     })
                 }
             </View>

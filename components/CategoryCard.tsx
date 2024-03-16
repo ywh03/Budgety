@@ -27,6 +27,7 @@ export default function CategoryCard (props: any) {
         <View>
             <ListItem
                 containerStyle={styles.categoryCard}
+                pad={2}
                 onPress={() => {
                     if (props.redirectType === "entryInput") router.push({pathname: "/(tabs)/entryInput/categorySelect", params: {categoryId: props.categoryInfo.id}});
                     else if (props.redirectType === "category") router.push('/(tabs)/categories/' + props.categoryInfo.id as Href<String>)
@@ -42,7 +43,16 @@ export default function CategoryCard (props: any) {
                         {props.categoryInfo.name}
                     </ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron />
+                {
+                    props.categoryInfo.descendantCount && props.redirectType !== "entryInputEnd" ? (
+                        <Text style={styles.rightText}>({props.categoryInfo.descendantCount})</Text>
+                    ) : null
+                }
+                {
+                    props.categoryInfo.descendantCount && props.redirectType !== "entryInputEnd" ? (
+                        <ListItem.Chevron color="#787878" />
+                    ) : null
+                }
             </ListItem>
         </View>
     )
@@ -67,5 +77,10 @@ const styles = StyleSheet.create({
     },
     iconStyle: {
         fontSize: 26,
-    }
+    },
+    rightText: {
+        color: "#787878",
+        fontSize: 22,
+        fontFamily: "ags-r",
+    },
 })

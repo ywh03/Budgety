@@ -2,15 +2,16 @@ import * as SQLite from "expo-sqlite";
 
 export const createCategory = async (db: SQLite.SQLiteDatabase, category: Category) => {
     const createQuery = `
-        INSERT INTO Categories (name, icon, hexColor, parentCategoryId)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO Categories (name, icon, hexColor, parentCategoryId, descendantCount)
+        VALUES (?, ?, ?, ?, ?)
     `
 
     const values = [
         category.name,
         category.icon,
         category.hexColor,
-        category.parentCategoryId ?? null,
+        category.parentCategoryId,
+        category.descendantCount,
     ]
 
     try {

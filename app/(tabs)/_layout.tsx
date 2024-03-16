@@ -37,7 +37,7 @@ export default function TabLayout() {
           title: 'Tab One',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
-            <Link href="/categories/" asChild>
+            <Link href="/debug" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome

@@ -4,6 +4,7 @@ import CategoryCard from "@/components/CategoryCard";
 import { View, Text } from "@/components/Themed";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import React from "react";
+import { StyleSheet } from "react-native";
 
 export default function CategorySelectScreen() {
     const { categoryId } = useLocalSearchParams();
@@ -34,16 +35,21 @@ export default function CategorySelectScreen() {
 
     return (
         <View>
+            {
+                categoryId !== "root" ? (
+                    <View>
+                        <Text style={styles.sectionHeader}>Main Category</Text>
+                        { 
+                            parentCategoryInfo ? (
+                                <CategoryCard categoryInfo={parentCategoryInfo} redirectType={"entryInputEnd"} />
+                            ) : null
+                        }
+                    </View>
+                ) : null
+            }
+            
             <View>
-                <Text>Something</Text>
-                { 
-                    parentCategoryInfo ? (
-                        <CategoryCard categoryInfo={parentCategoryInfo} />
-                    ) : null
-                }
-            </View>
-            <View>
-                <Text>Subcategories</Text>
+                <Text style={styles.sectionHeader}>Subcategories</Text>
                 {
                     allCategories ? (
                         allCategories.map(category => {
@@ -55,3 +61,14 @@ export default function CategorySelectScreen() {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    sectionHeader: {
+        fontSize: 18,
+        color: "#787878",
+        fontFamily: "ags-r",
+        paddingTop: 20,
+        paddingBottom: 15,
+        paddingLeft: 20,
+    }
+})
